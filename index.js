@@ -21,7 +21,11 @@ const bot = new TelegramBot(TELEGRAM_BOT_TOKEN);
 
 // === Scrape + Notify ===
 export async function fetchAndNotify() {
-  const { data } = await axios.get(ANN_URL);
+  const { data } = await axios.get(ANN_URL, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+    }
+  });
   const $ = cheerio.load(data);
 
   const announcements = [];
@@ -54,3 +58,6 @@ export async function fetchAndNotify() {
 
 // Run once on execution
 fetchAndNotify();
+
+// Run every 10 minutes
+setInterval(fetchAndNotify, 10 * 60 * 1000);
